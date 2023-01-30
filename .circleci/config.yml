@@ -54,5 +54,3 @@ workflows:
       - say-hello
       - print-hello
       - print-world
-          reguires: [print-hello]
-
