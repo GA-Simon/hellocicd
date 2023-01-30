@@ -28,8 +28,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello!"
+          name: "Print hello"
+          command: "echo Hello there!"
 
   print-world:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -41,8 +41,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say world"
-          command: "echo World!"
+          name: "Print world"
+          command: "echo World, A Pace!"
 
 
 # Invoke jobs via workflows
@@ -54,5 +54,5 @@ workflows:
       - say-hello
       - print-hello
       - print-world
-          requires:
-            - print-hello
+          reguires: [print-hello]
+
