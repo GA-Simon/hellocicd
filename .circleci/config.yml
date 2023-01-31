@@ -2,44 +2,112 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-jobs:
-  save_hello_world_output:
-    docker:
-      # - image: cimg/base:stable
-      - image: circleci/node:13.8.0
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - run: echo "text to output here" > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt
 
-  print_output_file:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: circleci/node:13.8.0
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt
+  jobs:
+    my_job:
+      docker:
+        - image: circleci/node: 13.8.0
+      steps:
+        - run: exit 1
+        - run:
+            name: on error
+            command: echo "Hello Error"
+            when: on_fail
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  workflows:
+    my_workflow:
+      jobs:
+        - my_job
 
-workflows:
-  my_workflow:
-    jobs:
-      - save_hello_world_output
-      - print_output_file:
-          requires:
-            - save_hello_world_output
+
+
+# commands:
+#   print_pipeline_id:
+#     steps:
+#       - run: echo ${CIRCLE_WORKFLOW_ID}
+
+# jobs:
+#   my_job:
+#     docker:
+#       - image: circleci/node: 13.8.0
+#     steps:
+#       - print_pipeline_id
+
+# workflows:
+#   my_workflow:
+#     jobs:
+#       - my_job
+
+
+# commands:
+#   print_pipeline_id:
+#     parameters:
+#       id:
+#         type: string
+#     steps:
+#       - run: echo << parameters.id >>
+
+# jobs:
+#   my_job:
+#     docker:
+#       - image: circleci/node: 13.8.0
+#     steps:
+#       - print_pipeline_id:
+#            id: << pipeline.id >>
+
+
+
+# # Define a job to be invoked later in a workflow.
+# # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+# jobs:
+#   save_hello_world_output:
+#     docker:
+#       # - image: cimg/base:stable
+#       - image: circleci/node:13.8.0
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - run: echo "text to output here" > ~/output.txt
+#       - persist_to_workspace:
+#           root: ~/
+#           paths:
+#             - output.txt
+
+#   print_output_file:
+#     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#     docker:
+#       - image: circleci/node:13.8.0
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - attach_workspace:
+#           at: ~/
+#       - run: cat ~/output.txt
+
+# # Invoke jobs via workflows
+# # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
+# workflows:
+#   my_workflow:
+#     jobs:
+#       - save_hello_world_output
+#       - print_output_file:
+#           requires:
+#             - save_hello_world_output
+
+
+    # defaults: &defaults
+    #   docker:
+    #     - image: felicianotech/docker-hugo:0.27.1
+    #   working_directory: ~/project
+
+    # build:
+    #   <<: *defaults
+    #   steps:
+    #     - checkout
+    #     - run
+
 
 
 #   say-hello:
