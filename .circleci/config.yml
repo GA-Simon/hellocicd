@@ -16,9 +16,8 @@ jobs:
       - checkout
       - run:
           name: "Say hello"
-          command: |
-          "echo Hello, World!"
-          "ls -al"
+          command: "echo Hello, World!"
+      - run : ls -la
 
   print-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
