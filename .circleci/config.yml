@@ -5,22 +5,20 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  save_hello_world_output:
     docker:
-      - image: cimg/base:stable
+      # - image: cimg/base:stable
+      - image: circleci/node:13.8.0
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-      - run : ls -la
-      # - run: echo "My Name Is $NAME"
+      - run: echo "text to output here" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
 
-  print-hello:
+  print_output_file:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -28,48 +26,87 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - checkout
-      - run:
-          name: "Print hello"
-          command: "echo Hello there!"
-
-  print-world:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: circleci/node:13.8.0
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: "Print world"
-          command: "echo World, A Pace!"
-
-  build:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:2020.01
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: "echo an env that is part of our project"
-          command: |
-            echo $NAME
-
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 
 workflows:
-  say-hello-workflow:
+  my_workflow:
     jobs:
-      - say-hello
-      - print-hello
-      - print-world:
+      - save_hello_world_output
+      - print_output_file:
           requires:
-            - print-hello
-      - build
+            - save_hello_world_output
+
+
+#   say-hello:
+#     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#     docker:
+#       - image: cimg/base:stable
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - checkout
+#       - run:
+#           name: "Say hello"
+#           command: "echo Hello, World!"
+#       - run : ls -la
+#       # - run: echo "My Name Is $NAME"
+
+#   print-hello:
+#     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#     docker:
+#       - image: circleci/node:13.8.0
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - checkout
+#       - run:
+#           name: "Print hello"
+#           command: "echo Hello there!"
+
+#   print-world:
+#     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#     docker:
+#       - image: circleci/node:13.8.0
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - checkout
+#       - run:
+#           name: "Print world"
+#           command: "echo World, A Pace!"
+
+#   build:
+#     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#     docker:
+#       - image: cimg/base:2020.01
+#     # Add steps to the job
+#     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#     steps:
+#       - checkout
+#       - run:
+#           name: "echo an env that is part of our project"
+#           command: |
+#             echo $NAME
+
+
+# # Invoke jobs via workflows
+# # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
+# workflows:
+#   say-hello-workflow:
+#     jobs:
+#       - say-hello
+#       - print-hello
+#       - print-world:
+#           requires:
+#             - print-hello
+#       - build
