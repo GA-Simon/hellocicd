@@ -18,7 +18,7 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
       - run : ls -la
-      - run: echo "My NAme IS ${NAME}"
+      - run: echo "My Name Is $NAME"
 
   print-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
